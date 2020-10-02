@@ -10,6 +10,10 @@ module RSpec
             spec_files,
             '--require', 'rspec-rerun/formatter',
             '--format', 'RSpec::Rerun::Formatter',
+            args[:format_junit],
+            args[:out_junit],
+            args[:format_html],
+            args[:out_html],
             *dot_rspec_options
           ].compact.flatten
           if args[:tag]
@@ -22,18 +26,19 @@ module RSpec
         def parse_args(args)
           options = args.extras
 
+          # # Error on multiple arguments
           # Error on multiple arguments
           if options.size > 1
-            fail ArgumentError 'rspec-rerun can take an integer (retry_count) or options hash'
+            # fail ArgumentError 'rspec-rerun can take an integer (retry_count) or options hash'
           else
             options = options[0]
-          end
+          end  
 
           # Handle if opts is just a retry_count integer
           options = if options.is_a? Hash
             options
           else
-            { retry_count: options }
+            { retry_count: options[0], pattern: options[1], format_junit: options[2], out_junit: options[3],  format_html: options[4], out_html: options[5] }
           end
 
           # Parse environment variables
